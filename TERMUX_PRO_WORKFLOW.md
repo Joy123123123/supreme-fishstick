@@ -1,6 +1,7 @@
 # Termux Pro Workflow: Coding Agent + Chat Agent
 
 এই গাইডে Termux-এ advanced level workflow implement করার জন্য ready-to-use process দেওয়া হলো।
+All command examples assume UTF-8 terminal encoding.
 
 ## Requested Quick Setup (10-Step, Copy-Paste Friendly)
 
@@ -22,6 +23,8 @@ pip install virtualenv pipx
 3) **Workspace create**
 
 ```bash
+# Replace <YOUR_REPO_URL> and <YOUR_REPO_NAME> with your actual repository URL and repo name
+# Example: git clone https://github.com/username/repo.git && cd repo
 mkdir -p ~/workspaces ~/bin ~/logs ~/backups
 cd ~/workspaces
 git clone <YOUR_REPO_URL>
@@ -70,6 +73,7 @@ source .venv/bin/activate
 ```bash
 pkg update -y && pkg upgrade -y
 git fetch --all --prune
+# interactive cleanup by design (asks confirmation for each file)
 find . -type f -name "*.log" -mtime +7 -ok rm {} \;
 ```
 
@@ -248,6 +252,8 @@ mkdir -p ~/workspaces ~/bin ~/logs ~/backups
 
 ```bash
 cd ~/workspaces
+# Replace <YOUR_REPO_URL> and <YOUR_REPO_NAME> with your actual repository URL and repo name
+# Example: git clone https://github.com/username/repo.git && cd repo
 git clone <YOUR_REPO_URL> && cd <YOUR_REPO_NAME>
 mkdir -p .agent/{prompts,reports,logs,tmp}
 cp .env.example .env 2>/dev/null || touch .env
@@ -255,7 +261,7 @@ chmod 600 .env
 if command -v python >/dev/null 2>&1; then
   python -m venv .venv
 else
-  echo "Python না থাকলে .venv create skip করা হবে"
+  echo "Python not found, skipping .venv creation"
 fi
 ```
 
@@ -291,6 +297,7 @@ echo "End: $(date -Iseconds)" >> .agent/logs/batch.log
 
 ```bash
 git fetch --all --prune
+# interactive cleanup by design (asks confirmation for each file)
 find . -type f -name "*.log" -mtime +7 -ok rm {} \;
 find . -type d -name "__pycache__" -prune -exec rm -rf {} +
 ```
@@ -306,6 +313,7 @@ pkg install -y git curl wget openssh jq ripgrep fd nodejs python clang make
 termux-setup-storage
 mkdir -p ~/workspaces ~/bin ~/logs ~/backups
 cd ~/workspaces
+# Replace <YOUR_REPO_URL> and <YOUR_REPO_NAME> with your actual repository URL and repo name
 git clone <YOUR_REPO_URL>
 cd <YOUR_REPO_NAME>
 mkdir -p .agent/{prompts,reports,logs,tmp}
@@ -359,6 +367,7 @@ echo "Run code review and security scan before finalize"
 ```bash
 pkg update -y && pkg upgrade -y
 git fetch --all --prune
+# interactive cleanup by design (asks confirmation for each file)
 find . -type f -name "*.log" -mtime +7 -ok rm {} \;
 find . -type d -name "__pycache__" -prune -exec rm -rf {} +
 echo "Prepare next week: tasks, risks, rollback notes"

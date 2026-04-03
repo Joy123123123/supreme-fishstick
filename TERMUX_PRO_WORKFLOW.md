@@ -118,7 +118,7 @@ alias gc='git commit -m'
 alias gp='git pull --rebase'
 alias ll='ls -lah'
 alias lg='git --no-pager log --oneline -n 15'
-alias tclean='find . -type f -name "*.log" -size +20M -print'
+alias tfindlogs='find . -type f -name "*.log" -size +20M -print'
 ```
 
 ## 9) Quality Gate (Mandatory)
@@ -177,7 +177,7 @@ chmod 600 .env
 if command -v python >/dev/null 2>&1; then
   python -m venv .venv
 else
-  echo "Python না থাকায় .venv create skip করা হলো"
+  echo "Python না থাকলে .venv create skip করা হবে"
 fi
 ```
 
@@ -213,8 +213,6 @@ echo "End: $(date -Iseconds)" >> .agent/logs/batch.log
 
 ```bash
 git fetch --all --prune
-find . -type f -name "*.log" -mtime +7 -print
-# review output, then cleanup:
-# find . -type f -name "*.log" -mtime +7 -delete
+find . -type f -name "*.log" -mtime +7 -ok rm {} \;
 find . -type d -name "__pycache__" -prune -exec rm -rf {} +
 ```

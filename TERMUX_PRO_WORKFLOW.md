@@ -113,12 +113,12 @@ Best practices:
 
 ```bash
 alias gs='git status -sb'
-alias ga='git add .'
+alias ga='git add -p'
 alias gc='git commit -m'
 alias gp='git pull --rebase'
 alias ll='ls -lah'
 alias lg='git --no-pager log --oneline -n 15'
-alias tclean='find . -type f -name "*.log" -size +20M -delete'
+alias tclean='find . -type f -name "*.log" -size +20M -print'
 ```
 
 ## 9) Quality Gate (Mandatory)
@@ -191,7 +191,7 @@ git pull --rebase
 git checkout -b feat/<short-task-name>
 
 # 3) do small change, then:
-git add .
+git add -p
 git commit -m "feat: <short-message>"
 
 # 4) local quality gate (use your repo commands)

@@ -2,6 +2,84 @@
 
 এই গাইডে Termux-এ advanced level workflow implement করার জন্য ready-to-use process দেওয়া হলো।
 
+## Requested Quick Setup (10-Step, Copy-Paste Friendly)
+
+1) **Termux update + base tools install**
+
+```bash
+pkg update -y && pkg upgrade -y
+pkg install -y git curl wget openssh jq ripgrep fd nodejs python clang make
+termux-setup-storage
+```
+
+2) **Optional Python tooling**
+
+```bash
+pip install --upgrade pip
+pip install virtualenv pipx
+```
+
+3) **Workspace create**
+
+```bash
+mkdir -p ~/workspaces ~/bin ~/logs ~/backups
+cd ~/workspaces
+git clone <YOUR_REPO_URL>
+cd <YOUR_REPO_NAME>
+```
+
+4) **Project local structure**
+
+```bash
+mkdir -p .agent/{prompts,reports,logs,tmp}
+cp .env.example .env 2>/dev/null || touch .env
+chmod 600 .env
+```
+
+5) **(If Python project) virtual env**
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+6) **Task execution workflow (every task)**
+- Explore code
+- Plan ছোট করে লিখো
+- Small change করো
+- Test চালাও
+- Review করো
+- Security check করো
+- Finalize/commit
+
+7) **Prompt template (প্রতি task এ)**
+- Goal
+- Constraints
+- Files/Scope
+- Expected Output
+- Done Criteria
+- Validation Commands
+
+8) **Batch কাজ (অনেক request হলে)**
+- প্রতি batch 10–20 task
+- প্রতিটায় retry/backoff rule রাখো
+- error summary আলাদা log-এ লিখো
+
+9) **Daily maintenance**
+
+```bash
+pkg update -y && pkg upgrade -y
+git fetch --all --prune
+find . -type f -name "*.log" -mtime +7 -ok rm {} \;
+```
+
+10) **Final map আলাদা রাখা**
+- Setup commands
+- Task workflow
+- Validation commands
+- Rollback steps
+- Common errors + fixes
+
 ## 1) Base Setup Strong
 
 ```bash
@@ -215,4 +293,73 @@ echo "End: $(date -Iseconds)" >> .agent/logs/batch.log
 git fetch --all --prune
 find . -type f -name "*.log" -mtime +7 -ok rm {} \;
 find . -type d -name "__pycache__" -prune -exec rm -rf {} +
+```
+
+---
+
+## Day-1 to Day-7 Execution Map (Exact Copy-Paste)
+
+### Day-1 (Base install + workspace)
+```bash
+pkg update -y && pkg upgrade -y
+pkg install -y git curl wget openssh jq ripgrep fd nodejs python clang make
+termux-setup-storage
+mkdir -p ~/workspaces ~/bin ~/logs ~/backups
+cd ~/workspaces
+git clone <YOUR_REPO_URL>
+cd <YOUR_REPO_NAME>
+mkdir -p .agent/{prompts,reports,logs,tmp}
+cp .env.example .env 2>/dev/null || touch .env
+chmod 600 .env
+```
+
+### Day-2 (Python optional setup + baseline check)
+```bash
+pip install --upgrade pip
+pip install virtualenv pipx
+python -m venv .venv
+source .venv/bin/activate
+git status -sb
+```
+
+### Day-3 (Start first task safely)
+```bash
+git pull --rebase
+git checkout -b feat/first-small-task
+# make small change
+git add -p
+git commit -m "feat: first small task"
+```
+
+### Day-4 (Validation day)
+```bash
+# replace with your repo commands
+# npm run lint && npm test && npm run build
+# or: pytest
+echo "Run repo validation commands here"
+```
+
+### Day-5 (Batch run discipline)
+```bash
+mkdir -p .agent/logs
+echo "Start: $(date -Iseconds)" >> .agent/logs/batch.log
+echo "Batch rule: size=10 retry=3 backoff=5s" >> .agent/logs/batch.log
+echo "Process batches and append per-batch summary" >> .agent/logs/batch.log
+echo "End: $(date -Iseconds)" >> .agent/logs/batch.log
+```
+
+### Day-6 (Review + security habit)
+```bash
+git --no-pager log --oneline -n 10
+git --no-pager diff --stat HEAD~1..HEAD
+echo "Run code review and security scan before finalize"
+```
+
+### Day-7 (Maintenance + next-week prep)
+```bash
+pkg update -y && pkg upgrade -y
+git fetch --all --prune
+find . -type f -name "*.log" -mtime +7 -ok rm {} \;
+find . -type d -name "__pycache__" -prune -exec rm -rf {} +
+echo "Prepare next week: tasks, risks, rollback notes"
 ```

@@ -174,7 +174,11 @@ git clone <YOUR_REPO_URL> && cd <YOUR_REPO_NAME>
 mkdir -p .agent/{prompts,reports,logs,tmp}
 cp .env.example .env 2>/dev/null || touch .env
 chmod 600 .env
-python -m venv .venv 2>/dev/null || true
+if command -v python >/dev/null 2>&1; then
+  python -m venv .venv
+else
+  echo "Python না থাকায় .venv create skip করা হলো"
+fi
 ```
 
 ### C) Run flow pack (per task)
@@ -209,6 +213,8 @@ echo "End: $(date -Iseconds)" >> .agent/logs/batch.log
 
 ```bash
 git fetch --all --prune
-find . -type f -name "*.log" -mtime +7 -delete
+find . -type f -name "*.log" -mtime +7 -print
+# review output, then cleanup:
+# find . -type f -name "*.log" -mtime +7 -delete
 find . -type d -name "__pycache__" -prune -exec rm -rf {} +
 ```
